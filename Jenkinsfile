@@ -1,27 +1,30 @@
 pipeline {
-    agent {
-        label '!windows'
+    agent any
+    options {
+        skipStagesAfterUnstable()
     }
-
-    environment {
-        DISABLE_AUTH = 'true'
-        DB_ENGINE    = 'sqlite'
-    }
-
     stages {
         stage('Build') {
             steps {
-                echo "Database engine is ${DB_ENGINE}"
-                echo "DISABLE_AUTH is ${DISABLE_AUTH}"
-                sh 'printenv'
+                  echo 'Building'
+            }
+        }
+        stage('Test') {
+            steps {
+                echo 'Testing'
+            }
+        }
+        stage('Deploy') {
+            steps {
+                echo 'Deploying'
             }
         }
     }
     post {
         always {
-            mail to: 'kateryna.koval@ringteam.com',
-                subject: "Failed Pipeline: ${currentBuild.fullDisplayName}",
-                body: "Something is wrong with ${env.BUILD_URL}"
+            mail to: 's.kutenko@gmail.com',
+                 subject: "Pipeline: ${currentBuild.fullDisplayName}",
+                 body: "Build URL ${env.BUILD_URL}"
         }
     }
-]
+}
